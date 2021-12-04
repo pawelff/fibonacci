@@ -1,0 +1,24 @@
+sudo: required
+language: generic
+
+services:
+  - docker
+
+before_install:
+  - docker build -t pf/lab8 -f Dockerfile.dev1 .
+
+script:
+  - docker run -e CI=true pf/lab8 npm run test
+
+deploy:
+  provider: elasticbeanstalk
+  region: "eu-central-1"
+  app: "lab8-fullstack"
+  env: "lab8fullstack-env"
+  bucket_name: "elasticbeanstalk-eu-central-1-659888414610"
+  bucket_path: "lab8-fullstack"
+  edge: true
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
